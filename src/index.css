@@ -114,3 +114,18 @@ input:focus {
   font-size: 2.4rem;
   font-weight: 700;
 }
+
+.alert {
+  background-color: #d8b7b7 !important; /* pastel pembe */
+  color: #2f2a2a !important; /* koyu gri yazı */
+  font-family: "Georgia", serif; /* sitenle uyumlu tipografi */
+  font-size: 15px;
+  border-radius: 8px;
+  padding: 10px 15px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  border: 1px solid #c7a4a4; /* hafif koyu pembe çerçeve */
+}
+
+.alert svg {
+  fill: #2f2a2a !important; /* ikonu da koyu gri yap */
+}

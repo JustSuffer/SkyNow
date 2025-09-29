@@ -1,5 +1,6 @@
 import React from "react";
-
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 function getWeatherIcon(wmoCode) {
   const icons = new Map([
     [[0], "☀️"],
@@ -48,14 +49,15 @@ class App extends React.Component {
     try {
       this.setState({ isLoading: true });
 
-      // 1) Getting location (geocoding)
       const geoRes = await fetch(
         `https://geocoding-api.open-meteo.com/v1/search?name=${this.state.location}`
       );
       const geoData = await geoRes.json();
-      console.log(geoData);
 
-      if (!geoData.results) throw new Error("Location not found");
+      if (!geoData.results) {
+        toast.error("Konum bulunamadı ❌", { className: "alert" });
+        return;
+      }
 
       const { latitude, longitude, timezone, name, country_code } =
         geoData.results.at(0);
@@ -64,14 +66,14 @@ class App extends React.Component {
         displayLocation: `${name} ${convertToFlag(country_code)}`,
       });
 
-      // 2) Getting actual weather
       const weatherRes = await fetch(
         `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&timezone=${timezone}&daily=weathercode,temperature_2m_max,temperature_2m_min`
       );
       const weatherData = await weatherRes.json();
       this.setState({ weather: weatherData.daily });
     } catch (err) {
-      console.err(err);
+      console.error(err);
+      toast.error("Bir hata oluştu 🚨", { className: "alert" });
     } finally {
       this.setState({ isLoading: false });
     }
@@ -101,6 +103,7 @@ class App extends React.Component {
             location={this.state.displayLocation}
           />
         )}
+        <ToastContainer position="bottom-right" autoClose={3000} />
       </div>
     );
   }
