@@ -59,7 +59,7 @@ class App extends React.Component {
       const geoData = await geoRes.json();
 
       if (!geoData.results || geoData.results.length === 0) {
-        toast.error("Konum bulunamadı ❌", { className: "alert" });
+        toast.error("Location not found ❌", { className: "alert" });
         return;
       }
 
@@ -75,14 +75,16 @@ class App extends React.Component {
       const weatherData = await weatherRes.json();
 
       if (!weatherData.daily) {
-        toast.error("Hava durumu bilgisi alınamadı 🌐", { className: "alert" });
+        toast.error("Weather information could not be obtained 🌐", {
+          className: "alert",
+        });
         return;
       }
 
       this.setState({ weather: weatherData.daily });
     } catch (err) {
       console.error(err);
-      toast.error("Bir hata oluştu 🚨", { className: "alert" });
+      toast.error("An error occurred 🚨", { className: "alert" });
     } finally {
       this.setState({ isLoading: false });
     }
@@ -90,7 +92,7 @@ class App extends React.Component {
 
   getCurrentLocationWeather() {
     if (!navigator.geolocation) {
-      toast.error("Tarayıcınız konum özelliğini desteklemiyor ❌", {
+      toast.error("Your browser does not support location feature ❌", {
         className: "alert",
       });
       return;
@@ -110,7 +112,9 @@ class App extends React.Component {
           const weatherData = await weatherRes.json();
 
           if (!weatherData.daily) {
-            toast.error("Hava durumu alınamadı 🌐", { className: "alert" });
+            toast.error("Couldn't get weather forecast 🌐", {
+              className: "alert",
+            });
             return;
           }
 
@@ -121,16 +125,19 @@ class App extends React.Component {
           });
         } catch (err) {
           console.error(err);
-          toast.error("Konumdan hava durumu alınırken hata oluştu 🚨", {
-            className: "alert",
-          });
+          toast.error(
+            "An error occurred while retrieving weather from the location 🚨",
+            {
+              className: "alert",
+            }
+          );
         } finally {
           this.setState({ isLoading: false });
         }
       },
       (error) => {
         console.error(error);
-        toast.error("Konum izni reddedildi ❌", { className: "alert" });
+        toast.error("Location permission denied ❌", { className: "alert" });
       }
     );
   }
@@ -162,7 +169,7 @@ class App extends React.Component {
         <ToastContainer position="bottom-right" autoClose={3000} />
 
         <button onClick={this.getCurrentLocationWeather} className="button">
-          📍 Kendi Konumundan Hava Durumu
+          📍 Weather from Your Location
         </button>
       </div>
     );
