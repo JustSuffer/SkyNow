@@ -1,7 +1,6 @@
-import React from "react";
+/* import React from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
 function getWeatherIcon(wmoCode) {
   const icons = new Map([
     [[0], "☀️"],
@@ -44,7 +43,6 @@ class App extends React.Component {
       weather: {},
     };
     this.fetchWeather = this.fetchWeather.bind(this);
-    this.getCurrentLocationWeather = this.getCurrentLocationWeather.bind(this);
   }
 
   async fetchWeather() {
@@ -52,9 +50,7 @@ class App extends React.Component {
       this.setState({ isLoading: true });
 
       const geoRes = await fetch(
-        `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(
-          this.state.location
-        )}`
+        `https://geocoding-api.open-meteo.com/v1/search?name=${this.state.location}`
       );
       const geoData = await geoRes.json();
 
@@ -103,7 +99,21 @@ class App extends React.Component {
         try {
           this.setState({ isLoading: true });
 
-          // ✅ Direkt konum koordinatlarını kullan
+          // Reverse geocoding ile şehir/ülke bilgisi bulalım
+          const geoRes = await fetch(
+            `https://geocoding-api.open-meteo.com/v1/reverse?latitude=${latitude}&longitude=${longitude}`
+          );
+          const geoData = await geoRes.json();
+
+          let locationName = "Your Location";
+          if (geoData && geoData.results && geoData.results.length > 0) {
+            const { name, country_code } = geoData.results.at(0);
+            locationName = `${name} ${convertToFlag(country_code)}`;
+          }
+
+          this.setState({ displayLocation: locationName });
+
+          // Hava durumu çekelim
           const weatherRes = await fetch(
             `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&timezone=auto&daily=weathercode,temperature_2m_max,temperature_2m_min`
           );
@@ -114,11 +124,7 @@ class App extends React.Component {
             return;
           }
 
-          // ✅ DisplayLocation basitçe "Your Location" olsun
-          this.setState({
-            displayLocation: "📍 Your Location",
-            weather: weatherData.daily,
-          });
+          this.setState({ weather: weatherData.daily });
         } catch (err) {
           console.error(err);
           toast.error("Konumdan hava durumu alınırken hata oluştu 🚨", {
@@ -161,7 +167,10 @@ class App extends React.Component {
         )}
         <ToastContainer position="bottom-right" autoClose={3000} />
 
-        <button onClick={this.getCurrentLocationWeather} className="button">
+        <button
+          onClick={() => this.getCurrentLocationWeather()}
+          className="button"
+        >
           📍 Kendi Konumundan Hava Durumu
         </button>
       </div>
@@ -215,3 +224,4 @@ class Day extends React.Component {
     );
   }
 }
+ */
