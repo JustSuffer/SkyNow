@@ -70,7 +70,7 @@ class App extends React.Component {
       });
 
       const weatherRes = await fetch(
-        `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&timezone=auto&daily=weathercode,temperature_2m_max,temperature_2m_min`
+        `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&timezone=auto&daily=weathercode,temperature_2m_max,temperature_2m_min&hourly=temperature_2m,relativehumidity_2m,windspeed_10m,precipitation,weathercode`
       );
       const weatherData = await weatherRes.json();
 
@@ -81,7 +81,7 @@ class App extends React.Component {
         return;
       }
 
-      this.setState({ weather: weatherData.daily });
+      this.setState({ weather: weatherData });
     } catch (err) {
       console.error(err);
       toast.error("An error occurred 🚨", { className: "alert" });
@@ -107,7 +107,7 @@ class App extends React.Component {
 
           // ✅ Direkt konum koordinatlarını kullan
           const weatherRes = await fetch(
-            `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&timezone=auto&daily=weathercode,temperature_2m_max,temperature_2m_min`
+            `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&timezone=auto&daily=weathercode,temperature_2m_max,temperature_2m_min&hourly=temperature_2m,relativehumidity_2m,windspeed_10m,precipitation,weathercode`
           );
           const weatherData = await weatherRes.json();
 
@@ -121,7 +121,7 @@ class App extends React.Component {
           // ✅ DisplayLocation basitçe "Your Location" olsun
           this.setState({
             displayLocation: "📍 Your Location",
-            weather: weatherData.daily,
+            weather: weatherData,
           });
         } catch (err) {
           console.error(err);
@@ -160,7 +160,7 @@ class App extends React.Component {
 
         {this.state.isLoading && <p className="loader">Loading...</p>}
 
-        {this.state.weather.weathercode && (
+        {this.state.weather.daily && this.state.weather.daily.weathercode && (
           <Weather
             weather={this.state.weather}
             location={this.state.displayLocation}
@@ -179,13 +179,18 @@ class App extends React.Component {
 export default App;
 
 class Weather extends React.Component {
+  componentWillUnmount() {
+    this.setState({});
+  }
+
   render() {
+    const { daily, hourly } = this.props.weather;
     const {
       temperature_2m_max: max,
       temperature_2m_min: min,
       time: dates,
       weathercode: codes,
-    } = this.props.weather;
+    } = daily;
 
     return (
       <div>
@@ -199,6 +204,14 @@ class Weather extends React.Component {
               code={codes.at(i)}
               key={date}
               isToday={i === 0}
+              hourly={hourly ? {
+                time: hourly.time.slice(i * 24, (i + 1) * 24),
+                temperature_2m: hourly.temperature_2m.slice(i * 24, (i + 1) * 24),
+                relativehumidity_2m: hourly.relativehumidity_2m.slice(i * 24, (i + 1) * 24),
+                windspeed_10m: hourly.windspeed_10m.slice(i * 24, (i + 1) * 24),
+                precipitation: hourly.precipitation.slice(i * 24, (i + 1) * 24),
+                weathercode: hourly.weathercode.slice(i * 24, (i + 1) * 24),
+              } : null}
             />
           ))}
         </ul>
@@ -208,8 +221,18 @@ class Weather extends React.Component {
 }
 
 class Day extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { showHourly: false };
+    this.toggleHourly = this.toggleHourly.bind(this);
+  }
+
+  toggleHourly() {
+    this.setState((curr) => ({ showHourly: !curr.showHourly }));
+  }
+
   render() {
-    const { date, max, min, code, isToday } = this.props;
+    const { date, max, min, code, isToday, hourly } = this.props;
 
     return (
       <li className="day">
@@ -218,7 +241,45 @@ class Day extends React.Component {
         <p>
           {Math.floor(min)}&deg; &mdash; <strong>{Math.ceil(max)}&deg;</strong>
         </p>
+        <button className="mini-button" onClick={this.toggleHourly}>
+          {this.state.showHourly ? "Hide" : "Details"}
+        </button>
+        {this.state.showHourly && hourly && (
+          <HourlyForecast hourly={hourly} onClose={this.toggleHourly} />
+        )}
       </li>
     );
   }
+}
+
+function HourlyForecast({ hourly, onClose }) {
+  return (
+    <div className="hourly-modal-overlay" onClick={onClose}>
+      <div className="hourly-modal" onClick={(e) => e.stopPropagation()}>
+        <button className="close-button" onClick={onClose}>
+          &times;
+        </button>
+        <h3>Hourly Forecast</h3>
+        <div className="hourly-list">
+          {hourly.time.map((time, i) => (
+            <div key={time} className="hourly-item">
+              <span className="hour-time">
+                {new Date(time).toLocaleTimeString([], {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}
+              </span>
+              <span className="hour-icon">{getWeatherIcon(hourly.weathercode[i])}</span>
+              <span className="hour-temp">{Math.round(hourly.temperature_2m[i])}&deg;</span>
+              <div className="hour-details">
+                <span>💧 {hourly.precipitation[i]}mm</span>
+                <span>💨 {hourly.windspeed_10m[i]}km/h</span>
+                <span>🌫 {hourly.relativehumidity_2m[i]}%</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
 }
