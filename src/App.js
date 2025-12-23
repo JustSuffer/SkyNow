@@ -252,7 +252,59 @@ class Day extends React.Component {
   }
 }
 
+import {
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+  CartesianGrid,
+} from "recharts";
+
 function HourlyForecast({ hourly, onClose }) {
+  const [metric, setMetric] = React.useState("temperature_2m");
+
+  // Transform data for Recharts
+  const data = hourly.time.map((t, i) => ({
+    time: new Date(t).toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+    }),
+    temperature_2m: Math.round(hourly.temperature_2m[i]),
+    precipitation: hourly.precipitation[i],
+    windspeed_10m: hourly.windspeed_10m[i],
+    icon: getWeatherIcon(hourly.weathercode[i]),
+  }));
+
+  const metrics = [
+    { key: "temperature_2m", label: "Temperature", color: "#d8b7b7", unit: "°" },
+    { key: "precipitation", label: "Rain", color: "#a18d8d", unit: "mm" },
+    { key: "windspeed_10m", label: "Wind", color: "#7c6868", unit: "km/h" },
+  ];
+
+  const currentMetric = metrics.find((m) => m.key === metric);
+
+  const CustomTooltip = ({ active, payload, label }) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className="custom-tooltip">
+          <p className="tooltip-time">{label}</p>
+          <div className="tooltip-row">
+            <span className="tooltip-val">
+              {payload[0].value}
+              {currentMetric.unit}
+            </span>
+            {metric === "temperature_2m" && (
+              <span className="tooltip-icon">{payload[0].payload.icon}</span>
+            )}
+          </div>
+        </div>
+      );
+    }
+    return null;
+  };
+
   return (
     <div className="hourly-modal-overlay" onClick={onClose}>
       <div className="hourly-modal" onClick={(e) => e.stopPropagation()}>
@@ -260,24 +312,49 @@ function HourlyForecast({ hourly, onClose }) {
           &times;
         </button>
         <h3>Hourly Forecast</h3>
-        <div className="hourly-list">
-          {hourly.time.map((time, i) => (
-            <div key={time} className="hourly-item">
-              <span className="hour-time">
-                {new Date(time).toLocaleTimeString([], {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                })}
-              </span>
-              <span className="hour-icon">{getWeatherIcon(hourly.weathercode[i])}</span>
-              <span className="hour-temp">{Math.round(hourly.temperature_2m[i])}&deg;</span>
-              <div className="hour-details">
-                <span>💧 {hourly.precipitation[i]}mm</span>
-                <span>💨 {hourly.windspeed_10m[i]}km/h</span>
-                <span>🌫 {hourly.relativehumidity_2m[i]}%</span>
-              </div>
-            </div>
+
+        <div className="chart-tabs">
+          {metrics.map((m) => (
+            <button
+              key={m.key}
+              className={`chart-tab ${metric === m.key ? "active" : ""}`}
+              onClick={() => setMetric(m.key)}
+            >
+              {m.label}
+            </button>
           ))}
+        </div>
+
+        <div className="chart-container">
+          <ResponsiveContainer width="100%" height={300}>
+            <AreaChart data={data}>
+              <defs>
+                <linearGradient id="colorMetric" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor={currentMetric.color} stopOpacity={0.8} />
+                  <stop offset="95%" stopColor={currentMetric.color} stopOpacity={0} />
+                </linearGradient>
+              </defs>
+              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.3)" />
+              <XAxis
+                dataKey="time"
+                tick={{ fill: "#4a4040", fontSize: 12 }}
+                tickMargin={10}
+                interval="preserveStartEnd"
+                minTickGap={30}
+              />
+              <YAxis hide domain={['auto', 'auto']} />
+              <Tooltip content={<CustomTooltip />} cursor={{ stroke: "#4a4040", strokeWidth: 1 }} />
+              <Area
+                type="monotone"
+                dataKey={metric}
+                stroke={currentMetric.color}
+                strokeWidth={3}
+                fillOpacity={1}
+                fill="url(#colorMetric)"
+                animationDuration={1000}
+              />
+            </AreaChart>
+          </ResponsiveContainer>
         </div>
       </div>
     </div>
