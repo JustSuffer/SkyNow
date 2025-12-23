@@ -46,26 +46,35 @@ h2 {
 }
 
 .button {
-  background-color: #d8b7b7; /* pastel pembe ton (input’a yakın) */
-  color: #2f2a2a; /* koyu gri yazı rengi */
+  background-color: #d8b7b7;
+  /* pastel pembe ton (input’a yakın) */
+  color: #2f2a2a;
+  /* koyu gri yazı rengi */
   border: none;
   padding: 10px 20px;
-  border-radius: 8px; /* yumuşak köşeler */
+  border-radius: 8px;
+  /* yumuşak köşeler */
   font-size: 16px;
-  font-family: "Georgia", serif; /* senin sitedeki şık fontlara uyumlu */
+  font-family: "Georgia", serif;
+  /* senin sitedeki şık fontlara uyumlu */
   cursor: pointer;
-  transition: all 0.3s ease; /* hover efektleri için yumuşak geçiş */
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2); /* hafif gölge */
+  transition: all 0.3s ease;
+  /* hover efektleri için yumuşak geçiş */
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  /* hafif gölge */
 }
 
 .button:hover {
-  background-color: #c7a4a4; /* hover’da biraz koyu pembe */
-  transform: translateY(-2px); /* hover’da yukarı kalkma efekti */
+  background-color: #c7a4a4;
+  /* hover’da biraz koyu pembe */
+  transform: translateY(-2px);
+  /* hover’da yukarı kalkma efekti */
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
 
 .button:active {
-  transform: translateY(0); /* tıklandığında eski konumuna iner */
+  transform: translateY(0);
+  /* tıklandığında eski konumuna iner */
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 }
 
@@ -116,39 +125,50 @@ input:focus {
 }
 
 .alert {
-  background-color: #d8b7b7 !important; /* pastel pembe */
-  color: #2f2a2a !important; /* koyu gri yazı */
-  font-family: "Georgia", serif; /* sitenle uyumlu tipografi */
+  background-color: #d8b7b7 !important;
+  /* pastel pembe */
+  color: #2f2a2a !important;
+  /* koyu gri yazı */
+  font-family: "Georgia", serif;
+  /* sitenle uyumlu tipografi */
   font-size: 15px;
   border-radius: 8px;
   padding: 10px 15px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
-  border: 1px solid #c7a4a4; /* hafif koyu pembe çerçeve */
+  border: 1px solid #c7a4a4;
+  /* hafif koyu pembe çerçeve */
 }
 
 .alert svg {
-  fill: #2f2a2a !important; /* ikonu da koyu gri yap */
+  fill: #2f2a2a !important;
+  /* ikonu da koyu gri yap */
 }
 
 /* Hourly Feature Styles */
 
-/* Mini Button */
+/* Mini Button (Smoother Design) */
 .mini-button {
-  background-color: transparent;
-  border: 1px solid #d8b7b7;
-  color: #2f2a2a;
-  padding: 4px 10px;
-  font-size: 1.4rem;
-  border-radius: 12px;
+  background-color: rgba(216, 183, 183, 0.3);
+  /* Transparent pastel pink */
+  border: none;
+  color: #5a4e4e;
+  padding: 6px 14px;
+  font-size: 1.3rem;
+  border-radius: 20px;
+  /* Pill shape */
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
   font-family: inherit;
-  margin-top: 0.8rem;
+  margin-top: 1rem;
+  font-weight: 600;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
 
 .mini-button:hover {
   background-color: #d8b7b7;
   color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(216, 183, 183, 0.5);
 }
 
 /* Modal Overlay */
@@ -158,130 +178,179 @@ input:focus {
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(4px);
+  background-color: rgba(43, 40, 40, 0.3);
+  /* Darker, sophisticated overlay */
+  backdrop-filter: blur(8px);
+  /* Stronger blur for glass effect */
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
-  animation: fadeIn 0.3s ease;
+  animation: fadeIn 0.4s ease-out;
 }
 
-/* Modal Content */
+/* Modal Content - Horizontal Pop-up */
 .hourly-modal {
-  background-color: #f0d2ce;
+  background: rgba(240, 210, 206, 0.95);
+  /* Glass-like opacity */
   padding: 3rem;
-  border-radius: 16px;
-  width: 90%;
-  max-width: 550px;
-  max-height: 85vh;
-  overflow-y: auto;
+  border-radius: 24px;
+  width: 95%;
+  max-width: 900px;
+  /* Wider for horizontal scrolling */
+  max-height: 80vh;
   position: relative;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-  border: 1px solid #7c6868;
-  animation: slideUp 0.3s ease;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  animation: scaleUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  /* Smooth springy pop */
   color: #2f2a2a;
+  display: flex;
+  flex-direction: column;
 }
 
 .hourly-modal h3 {
   text-align: center;
-  margin-bottom: 2.5rem;
-  font-size: 2.8rem;
+  margin-bottom: 2rem;
+  font-size: 3rem;
   font-family: "Cinzel Decorative", cursive;
-  border-bottom: 1px solid rgba(47, 42, 42, 0.1);
-  padding-bottom: 1rem;
+  color: #3e3838;
+  letter-spacing: 1px;
 }
 
 .close-button {
   position: absolute;
   top: 1.5rem;
   right: 2rem;
-  background: none;
+  background: rgba(0, 0, 0, 0.05);
   border: none;
-  font-size: 3.2rem;
+  width: 3.6rem;
+  height: 3.6rem;
+  border-radius: 50%;
+  font-size: 2.4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
-  color: #2f2a2a;
-  line-height: 1;
-  opacity: 0.7;
-  transition: opacity 0.2s;
+  color: #4a4040;
+  transition: all 0.2s;
 }
 
 .close-button:hover {
-  opacity: 1;
+  background-color: rgba(0, 0, 0, 0.1);
+  transform: rotate(90deg);
 }
 
-/* Hourly List */
+/* Hourly List - Horizontal Scroll */
 .hourly-list {
   display: flex;
-  flex-direction: column;
-  gap: 1.2rem;
+  /* Horizontal flow */
+  flex-direction: row;
+  gap: 1.6rem;
+  overflow-x: auto;
+  padding: 1rem 0.5rem 2rem 0.5rem;
+  /* Padding for hover effects */
+  scroll-behavior: smooth;
+  height: 100%;
 }
 
 .hourly-item {
-  display: grid;
-  grid-template-columns: 7rem 5rem 6rem 1fr;
+  flex: 0 0 auto;
+  /* Don't shrink */
+  width: 100px;
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  background-color: rgba(255, 255, 255, 0.25);
-  padding: 1.2rem;
-  border-radius: 12px;
-  transition: background-color 0.2s;
+  gap: 1rem;
+  background-color: rgba(255, 255, 255, 0.3);
+  padding: 1.5rem 0.5rem;
+  border-radius: 50px;
+  /* Pill shape columns */
+  transition: all 0.3s ease;
+  border: 1px solid transparent;
 }
 
 .hourly-item:hover {
-  background-color: rgba(255, 255, 255, 0.4);
+  background-color: rgba(255, 255, 255, 0.6);
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+  border-color: rgba(255, 255, 255, 0.8);
 }
 
 .hour-time {
   font-weight: 700;
-  font-size: 1.6rem;
+  font-size: 1.4rem;
+  color: #555;
 }
 
 .hour-icon {
-  font-size: 2.8rem;
-  text-align: center;
+  font-size: 3.2rem;
+  margin: 0.5rem 0;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
 }
 
 .hour-temp {
-  font-weight: 700;
-  font-size: 2rem;
-  text-align: center;
+  font-weight: 800;
+  font-size: 2.2rem;
+  color: #222;
 }
 
 .hour-details {
   display: flex;
-  flex-wrap: wrap;
-  gap: 1.2rem;
-  font-size: 1.3rem;
-  justify-content: flex-end;
-  opacity: 0.9;
+  flex-direction: column;
+  gap: 0.6rem;
+  font-size: 1.1rem;
+  opacity: 0.8;
+  margin-top: 0.5rem;
+  align-items: center;
 }
 
 .hour-details span {
-  white-space: nowrap;
+  background: rgba(255, 255, 255, 0.4);
+  padding: 2px 6px;
+  border-radius: 8px;
 }
 
 /* Animations */
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
-@keyframes slideUp {
-  from { transform: translateY(30px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
+@keyframes scaleUp {
+  from {
+    transform: scale(0.9) translateY(20px);
+    opacity: 0;
+  }
+
+  to {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
 }
 
 /* Scrollbar styling for modal */
-.hourly-modal::-webkit-scrollbar {
-  width: 8px;
+.hourly-list::-webkit-scrollbar {
+  height: 8px;
+  /* Horizontal scrollbar height */
 }
-.hourly-modal::-webkit-scrollbar-track {
-  background: rgba(0,0,0,0.05);
+
+.hourly-list::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.03);
+  border-radius: 10px;
+  margin: 0 20px;
 }
-.hourly-modal::-webkit-scrollbar-thumb {
+
+.hourly-list::-webkit-scrollbar-thumb {
   background: #d8b7b7;
-  border-radius: 4px;
+  border-radius: 10px;
 }
-.hourly-modal::-webkit-scrollbar-thumb:hover {
+
+.hourly-list::-webkit-scrollbar-thumb:hover {
   background: #c7a4a4;
 }
