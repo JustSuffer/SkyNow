@@ -242,73 +242,99 @@ input:focus {
 }
 
 /* Hourly List - Horizontal Scroll */
+/* Hourly List - Horizontal Scroll */
 .hourly-list {
   display: flex;
   /* Horizontal flow */
   flex-direction: row;
-  gap: 1.6rem;
+  gap: 2rem;
+  /* Increased gap for better separation */
   overflow-x: auto;
-  padding: 1rem 0.5rem 2rem 0.5rem;
-  /* Padding for hover effects */
+  padding: 2rem 1rem 3rem 1rem;
+  /* More padding */
   scroll-behavior: smooth;
   height: 100%;
+  align-items: center;
+  /* Center items vertically if they differ in height */
 }
 
 .hourly-item {
   flex: 0 0 auto;
   /* Don't shrink */
-  width: 100px;
+  width: 140px;
+  /* Increased width to prevent overlapping */
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1rem;
-  background-color: rgba(255, 255, 255, 0.3);
-  padding: 1.5rem 0.5rem;
-  border-radius: 50px;
-  /* Pill shape columns */
-  transition: all 0.3s ease;
-  border: 1px solid transparent;
+  gap: 1.5rem;
+  /* More space between elements inside card */
+  background-color: rgba(255, 255, 255, 0.4);
+  padding: 2rem 1rem;
+  border-radius: 60px;
+  /* More elongated pill shape */
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(5px);
 }
 
 .hourly-item:hover {
-  background-color: rgba(255, 255, 255, 0.6);
-  transform: translateY(-5px);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
-  border-color: rgba(255, 255, 255, 0.8);
+  background-color: rgba(255, 255, 255, 0.7);
+  transform: translateY(-8px) scale(1.05);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+  border-color: rgba(255, 255, 255, 0.9);
+  z-index: 10;
 }
 
 .hour-time {
   font-weight: 700;
-  font-size: 1.4rem;
-  color: #555;
+  font-size: 1.6rem;
+  color: #4a4040;
+  background: rgba(255, 255, 255, 0.5);
+  padding: 0.4rem 1.2rem;
+  border-radius: 20px;
 }
 
 .hour-icon {
-  font-size: 3.2rem;
+  font-size: 4rem;
+  /* Larger icon */
   margin: 0.5rem 0;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.15));
+  transition: transform 0.3s ease;
+}
+
+
+.hourly-item:hover .hour-icon {
+  transform: scale(1.1);
 }
 
 .hour-temp {
   font-weight: 800;
-  font-size: 2.2rem;
-  color: #222;
+  font-size: 2.8rem;
+  /* Larger temp */
+  color: #2f2a2a;
+  text-shadow: 0 2px 4px rgba(255, 255, 255, 0.5);
 }
 
 .hour-details {
   display: flex;
   flex-direction: column;
-  gap: 0.6rem;
-  font-size: 1.1rem;
-  opacity: 0.8;
-  margin-top: 0.5rem;
+  gap: 0.8rem;
+  font-size: 1.2rem;
+  width: 100%;
   align-items: center;
+  margin-top: 1rem;
 }
 
 .hour-details span {
-  background: rgba(255, 255, 255, 0.4);
-  padding: 2px 6px;
-  border-radius: 8px;
+  white-space: nowrap;
+  background: rgba(255, 255, 255, 0.6);
+  padding: 0.6rem 1rem;
+  border-radius: 12px;
+  width: 100%;
+  text-align: center;
+  font-weight: 500;
+  color: #4a4040;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
 }
 
 /* Animations */
