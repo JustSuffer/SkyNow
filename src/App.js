@@ -260,6 +260,7 @@ import {
   Tooltip,
   ResponsiveContainer,
   CartesianGrid,
+  LabelList,
 } from "recharts";
 
 function HourlyForecast({ hourly, onClose }) {
@@ -327,14 +328,14 @@ function HourlyForecast({ hourly, onClose }) {
 
         <div className="chart-container">
           <ResponsiveContainer width="100%" height={300}>
-            <AreaChart data={data}>
+            <AreaChart data={data} margin={{ top: 20, right: 10, left: 10, bottom: 0 }}>
               <defs>
                 <linearGradient id="colorMetric" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="5%" stopColor={currentMetric.color} stopOpacity={0.8} />
                   <stop offset="95%" stopColor={currentMetric.color} stopOpacity={0} />
                 </linearGradient>
               </defs>
-              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.3)" />
+              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.2)" />
               <XAxis
                 dataKey="time"
                 tick={{ fill: "#4a4040", fontSize: 12 }}
@@ -352,7 +353,9 @@ function HourlyForecast({ hourly, onClose }) {
                 fillOpacity={1}
                 fill="url(#colorMetric)"
                 animationDuration={1000}
-              />
+              >
+                <LabelList dataKey={metric} position="top" fill="#4a4040" fontSize={14} fontWeight={700} formatter={(val) => val} />
+              </Area>
             </AreaChart>
           </ResponsiveContainer>
         </div>
