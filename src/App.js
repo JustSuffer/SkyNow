@@ -262,16 +262,7 @@ class Day extends React.Component {
   }
 }
 
-import {
-  AreaChart,
-  Area,
-  XAxis,
-  YAxis,
-  Tooltip,
-  ResponsiveContainer,
-  CartesianGrid,
-  LabelList,
-} from "recharts";
+
 
 // Custom Tick for X-Axis (Time + Icon)
 const CustomXAxisTick = ({ x, y, payload }) => {
@@ -368,7 +359,7 @@ function HourlyForecast({ hourly, onClose }) {
 
         <div className="chart-container">
           <ResponsiveContainer width="100%" height={250}>
-            <AreaChart data={data} margin={{ top: 25, right: 0, left: 0, bottom: 20 }}>
+            <AreaChart data={data} margin={{ top: 25, right: 20, left: 20, bottom: 20 }}>
               <defs>
                 <linearGradient id="colorMetric" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="5%" stopColor={currentMetric.color} stopOpacity={0.8} />
