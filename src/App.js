@@ -273,19 +273,39 @@ import {
   LabelList,
 } from "recharts";
 
+// Custom Tick for X-Axis (Time + Icon)
+const CustomXAxisTick = ({ x, y, payload }) => {
+  // payload.value is the time string
+  // We need to find the corresponding icon. 
+  // Since we can't easily pass the icon via payload in XAxis, we'll traverse the data or pass a mapping.
+  // A simpler way: The data array has 'icon'. 
+  // But XAxis payload only gives the value. 
+  // Workaround: We can render the icon if we know the index or if the value is unique.
+  // Actually, let's just render the time and we can try to render the icon if we pass the data to the tick constructor?
+  // Recharts XAxis 'tick' prop can take a React Element or function.
+  // If we pass the whole data array to the tick component (via closure), we can look it up.
+
+  return (
+    <g transform={`translate(${x},${y})`}>
+      <text x={0} y={0} dy={10} textAnchor="middle" fill="#4a4040" fontSize={9} fontWeight={700}>
+        {payload.value}
+      </text>
+    </g>
+  );
+};
+// Optimization: To render icons on XAxis, we need the icon data. 
+// A better approach for "Time + Icon" on X-Axis is to pass the data to the tick.
+
 function HourlyForecast({ hourly, onClose }) {
   const [metric, setMetric] = React.useState("temperature_2m");
 
-  // Transform data for Recharts
   const data = hourly.time.map((t, i) => ({
-    time: new Date(t).toLocaleTimeString([], {
-      hour: "2-digit",
-      minute: "2-digit",
-    }),
+    time: new Date(t).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
     temperature_2m: Math.round(hourly.temperature_2m[i]),
     precipitation: hourly.precipitation[i],
     windspeed_10m: hourly.windspeed_10m[i],
     icon: getWeatherIcon(hourly.weathercode[i]),
+    originalTime: t
   }));
 
   const metrics = [
@@ -296,19 +316,31 @@ function HourlyForecast({ hourly, onClose }) {
 
   const currentMetric = metrics.find((m) => m.key === metric);
 
+  // Custom Tick requiring data access
+  const CustomizedTick = (props) => {
+    const { x, y, payload } = props;
+    const item = data[props.index]; // Safe if index matches
+    return (
+      <g transform={`translate(${x},${y})`}>
+        {/* Icon */}
+        <text x={0} y={-10} dy={0} textAnchor="middle" fontSize={14}>
+          {item.icon}
+        </text>
+        {/* Time */}
+        <text x={0} y={10} dy={0} textAnchor="middle" fill="#4a4040" fontSize={9} fontWeight={600}>
+          {payload.value}
+        </text>
+      </g>
+    );
+  };
+
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
       return (
         <div className="custom-tooltip">
           <p className="tooltip-time">{label}</p>
           <div className="tooltip-row">
-            <span className="tooltip-val">
-              {payload[0].value}
-              {currentMetric.unit}
-            </span>
-            {metric === "temperature_2m" && (
-              <span className="tooltip-icon">{payload[0].payload.icon}</span>
-            )}
+            <span className="tooltip-val">{payload[0].value}{currentMetric.unit}</span>
           </div>
         </div>
       );
@@ -319,9 +351,7 @@ function HourlyForecast({ hourly, onClose }) {
   return (
     <div className="hourly-modal-overlay" onClick={onClose}>
       <div className="hourly-modal" onClick={(e) => e.stopPropagation()}>
-        <button className="close-button" onClick={onClose}>
-          &times;
-        </button>
+        <button className="close-button" onClick={onClose}>&times;</button>
         <h3>Hourly Forecast</h3>
 
         <div className="chart-tabs">
@@ -337,8 +367,8 @@ function HourlyForecast({ hourly, onClose }) {
         </div>
 
         <div className="chart-container">
-          <ResponsiveContainer width="100%" height={300}>
-            <AreaChart data={data} margin={{ top: 20, right: 10, left: 10, bottom: 0 }}>
+          <ResponsiveContainer width="100%" height={250}>
+            <AreaChart data={data} margin={{ top: 25, right: 0, left: 0, bottom: 20 }}>
               <defs>
                 <linearGradient id="colorMetric" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="5%" stopColor={currentMetric.color} stopOpacity={0.8} />
@@ -348,10 +378,10 @@ function HourlyForecast({ hourly, onClose }) {
               <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.2)" />
               <XAxis
                 dataKey="time"
-                tick={{ fill: "#4a4040", fontSize: 10 }}
-                tickMargin={5}
+                tick={<CustomizedTick />}
                 interval={0}
-                minTickGap={0}
+                tickLine={false}
+                axisLine={false}
               />
               <YAxis hide domain={['auto', 'auto']} />
               <Tooltip content={<CustomTooltip />} cursor={{ stroke: "#4a4040", strokeWidth: 1 }} />
@@ -362,9 +392,18 @@ function HourlyForecast({ hourly, onClose }) {
                 strokeWidth={3}
                 fillOpacity={1}
                 fill="url(#colorMetric)"
-                animationDuration={1000}
+                animationDuration={800}
+                isAnimationActive={true}
               >
-                <LabelList dataKey={metric} position="top" fill="#4a4040" fontSize={12} fontWeight={700} formatter={(val) => val} />
+                <LabelList
+                  dataKey={metric}
+                  position="top"
+                  offset={10}
+                  fill="#4a4040"
+                  fontSize={10}
+                  fontWeight={700}
+                  formatter={(val) => val}
+                />
               </Area>
             </AreaChart>
           </ResponsiveContainer>

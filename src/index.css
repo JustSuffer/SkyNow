@@ -194,11 +194,11 @@ input:focus {
 .hourly-modal {
   background: rgba(240, 210, 206, 0.95);
   /* Glass-like opacity */
-  padding: 2rem;
-  /* Reduced padding to give more space to chart */
+  padding: 1rem;
+  /* Minimal padding for max space */
   border-radius: 24px;
-  width: 95vw;
-  /* Almost full width */
+  width: 98vw;
+  /* Full width */
   max-width: none;
   /* Allow it to grow as much as needed */
   max-height: 90vh;
