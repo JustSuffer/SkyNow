@@ -265,25 +265,7 @@ class Day extends React.Component {
 
 
 // Custom Tick for X-Axis (Time + Icon)
-const CustomXAxisTick = ({ x, y, payload }) => {
-  // payload.value is the time string
-  // We need to find the corresponding icon. 
-  // Since we can't easily pass the icon via payload in XAxis, we'll traverse the data or pass a mapping.
-  // A simpler way: The data array has 'icon'. 
-  // But XAxis payload only gives the value. 
-  // Workaround: We can render the icon if we know the index or if the value is unique.
-  // Actually, let's just render the time and we can try to render the icon if we pass the data to the tick constructor?
-  // Recharts XAxis 'tick' prop can take a React Element or function.
-  // If we pass the whole data array to the tick component (via closure), we can look it up.
 
-  return (
-    <g transform={`translate(${x},${y})`}>
-      <text x={0} y={0} dy={10} textAnchor="middle" fill="#4a4040" fontSize={9} fontWeight={700}>
-        {payload.value}
-      </text>
-    </g>
-  );
-};
 // Optimization: To render icons on XAxis, we need the icon data. 
 // A better approach for "Time + Icon" on X-Axis is to pass the data to the tick.
 
