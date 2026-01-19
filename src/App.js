@@ -283,7 +283,7 @@ function HourlyForecast({ hourly, onClose }) {
 
   const metrics = [
     { key: "temperature_2m", label: "Temperature", color: "#d8b7b7", unit: "°" },
-    { key: "precipitation", label: "Rain", color: "#a18d8d", unit: "mm" },
+    { key: "precipitation", label: "Rain", color: "#2c5282", unit: "mm" },
     { key: "windspeed_10m", label: "Wind", color: "#7c6868", unit: "km/h" },
   ];
 
