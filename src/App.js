@@ -338,7 +338,7 @@ function HourlyForecast({ hourly, onClose }) {
               <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.2)" />
               <XAxis
                 dataKey="time"
-                tick={{ fill: "#4a4040", fontSize: 11 }}
+                tick={{ fill: "#4a4040", fontSize: 10 }}
                 tickMargin={5}
                 interval={0}
                 minTickGap={0}
@@ -354,7 +354,7 @@ function HourlyForecast({ hourly, onClose }) {
                 fill="url(#colorMetric)"
                 animationDuration={1000}
               >
-                <LabelList dataKey={metric} position="top" fill="#4a4040" fontSize={14} fontWeight={700} formatter={(val) => val} />
+                <LabelList dataKey={metric} position="top" fill="#4a4040" fontSize={12} fontWeight={700} formatter={(val) => val} />
               </Area>
             </AreaChart>
           </ResponsiveContainer>
