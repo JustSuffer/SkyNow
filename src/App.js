@@ -289,19 +289,42 @@ function HourlyForecast({ hourly, onClose }) {
 
   const currentMetric = metrics.find((m) => m.key === metric);
 
+  // Responsive check
+  const [isMobile, setIsMobile] = React.useState(window.innerWidth < 640);
+
+  React.useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 640);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   // Custom Tick requiring data access
   const CustomizedTick = (props) => {
     const { x, y, payload } = props;
     const item = data[props.index]; // Safe if index matches
+
+    // Format time for mobile: "04:00" -> "4"
+    const timeLabel = isMobile
+      ? parseInt(payload.value.split(":")[0], 10)
+      : payload.value;
+
     return (
       <g transform={`translate(${x},${y})`}>
         {/* Icon */}
-        <text x={0} y={-10} dy={0} textAnchor="middle" fontSize={14}>
+        <text x={0} y={-10} dy={0} textAnchor="middle" fontSize={isMobile ? 12 : 14}>
           {item.icon}
         </text>
         {/* Time */}
-        <text x={0} y={10} dy={0} textAnchor="middle" fill="#4a4040" fontSize={9} fontWeight={600}>
-          {payload.value}
+        <text
+          x={0}
+          y={10}
+          dy={0}
+          textAnchor="middle"
+          fill="#4a4040"
+          fontSize={isMobile ? 9 : 10}
+          fontWeight={600}
+        >
+          {timeLabel}
         </text>
       </g>
     );
