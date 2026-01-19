@@ -338,10 +338,10 @@ function HourlyForecast({ hourly, onClose }) {
               <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.2)" />
               <XAxis
                 dataKey="time"
-                tick={{ fill: "#4a4040", fontSize: 12 }}
-                tickMargin={10}
-                interval="preserveStartEnd"
-                minTickGap={30}
+                tick={{ fill: "#4a4040", fontSize: 11 }}
+                tickMargin={5}
+                interval={0}
+                minTickGap={0}
               />
               <YAxis hide domain={['auto', 'auto']} />
               <Tooltip content={<CustomTooltip />} cursor={{ stroke: "#4a4040", strokeWidth: 1 }} />
