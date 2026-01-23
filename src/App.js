@@ -344,6 +344,10 @@ function HourlyForecast({ hourly, onClose }) {
     return null;
   };
 
+  // Calculate ticks for 00:00, 04:00, 08:00, etc.
+  const tickIndices = [0, 4, 8, 12, 16, 20, 23];
+  const ticks = tickIndices.map(i => data[i]?.time).filter(Boolean);
+
   return (
     <div className="hourly-modal-overlay" onClick={onClose}>
       <div className="hourly-modal" onClick={(e) => e.stopPropagation()}>
@@ -374,6 +378,7 @@ function HourlyForecast({ hourly, onClose }) {
               <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.2)" />
               <XAxis
                 dataKey="time"
+                ticks={ticks}
                 tick={<CustomizedTick />}
                 interval={0}
                 tickLine={false}
@@ -390,17 +395,7 @@ function HourlyForecast({ hourly, onClose }) {
                 fill="url(#colorMetric)"
                 animationDuration={800}
                 isAnimationActive={true}
-              >
-                <LabelList
-                  dataKey={metric}
-                  position="top"
-                  offset={10}
-                  fill="#4a4040"
-                  fontSize={10}
-                  fontWeight={700}
-                  formatter={(val) => val}
-                />
-              </Area>
+              />
             </AreaChart>
           </ResponsiveContainer>
         </div>
