@@ -9,6 +9,7 @@ import {
   Tooltip,
   ResponsiveContainer,
   CartesianGrid,
+  LabelList,
 } from "recharts";
 
 function getWeatherIcon(wmoCode) {
@@ -297,7 +298,23 @@ function HourlyForecast({ hourly, onClose }) {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Custom Tick requiring data access
+  // Calculate ticks for 00:00, 04:00, 08:00, etc.
+  const tickIndices = [0, 4, 8, 12, 16, 20, 23];
+  const ticks = tickIndices.map(i => data[i]?.time).filter(Boolean);
+
+  // Custom Label to show values ONLY at tick intervals
+  const CustomizedLabel = (props) => {
+    const { x, y, stroke, value, index } = props;
+    if (!tickIndices.includes(index)) return null;
+
+    return (
+      <text x={x} y={y} dy={-10} fill={stroke} fontSize={14} fontWeight="bold" textAnchor="middle">
+        {value}{currentMetric.unit}
+      </text>
+    );
+  };
+
+  // Bigger, bolder ticks
   const CustomizedTick = (props) => {
     const { x, y, payload } = props;
     const item = data[props.index]; // Safe if index matches
@@ -309,43 +326,25 @@ function HourlyForecast({ hourly, onClose }) {
 
     return (
       <g transform={`translate(${x},${y})`}>
-        {/* Icon */}
-        <text x={0} y={-10} dy={0} textAnchor="middle" fontSize={isMobile ? 12 : 14}>
+        {/* Icon - Much Bigger */}
+        <text x={0} y={-15} dy={0} textAnchor="middle" fontSize={isMobile ? 24 : 32} filter="drop-shadow(0px 2px 2px rgba(0,0,0,0.1))">
           {item.icon}
         </text>
-        {/* Time */}
+        {/* Time - Bigger & Readable */}
         <text
           x={0}
-          y={10}
+          y={20}
           dy={0}
           textAnchor="middle"
           fill="#4a4040"
-          fontSize={isMobile ? 9 : 10}
-          fontWeight={600}
+          fontSize={isMobile ? 12 : 14}
+          fontWeight={800}
         >
           {timeLabel}
         </text>
       </g>
     );
   };
-
-  const CustomTooltip = ({ active, payload, label }) => {
-    if (active && payload && payload.length) {
-      return (
-        <div className="custom-tooltip">
-          <p className="tooltip-time">{label}</p>
-          <div className="tooltip-row">
-            <span className="tooltip-val">{payload[0].value}{currentMetric.unit}</span>
-          </div>
-        </div>
-      );
-    }
-    return null;
-  };
-
-  // Calculate ticks for 00:00, 04:00, 08:00, etc.
-  const tickIndices = [0, 4, 8, 12, 16, 20, 23];
-  const ticks = tickIndices.map(i => data[i]?.time).filter(Boolean);
 
   return (
     <div className="hourly-modal-overlay" onClick={onClose}>
@@ -366,8 +365,8 @@ function HourlyForecast({ hourly, onClose }) {
         </div>
 
         <div className="chart-container">
-          <ResponsiveContainer width="100%" height={250}>
-            <AreaChart data={data} margin={{ top: 25, right: 20, left: 20, bottom: 20 }}>
+          <ResponsiveContainer width="100%" height={220}>
+            <AreaChart data={data} margin={{ top: 30, right: 30, left: 30, bottom: 40 }}>
               <defs>
                 <linearGradient id="colorMetric" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="5%" stopColor={currentMetric.color} stopOpacity={0.8} />
@@ -394,7 +393,9 @@ function HourlyForecast({ hourly, onClose }) {
                 fill="url(#colorMetric)"
                 animationDuration={800}
                 isAnimationActive={true}
-              />
+              >
+                <LabelList content={<CustomizedLabel />} />
+              </Area>
             </AreaChart>
           </ResponsiveContainer>
         </div>
