@@ -9,7 +9,6 @@ import {
   Tooltip,
   ResponsiveContainer,
   CartesianGrid,
-  LabelList,
 } from "recharts";
 
 function getWeatherIcon(wmoCode) {
