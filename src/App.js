@@ -346,6 +346,20 @@ function HourlyForecast({ hourly, onClose }) {
     );
   };
 
+  const CustomTooltip = ({ active, payload, label }) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className="custom-tooltip">
+          <p className="tooltip-time">{label}</p>
+          <div className="tooltip-row">
+            <span className="tooltip-val">{payload[0].value}{currentMetric.unit}</span>
+          </div>
+        </div>
+      );
+    }
+    return null;
+  };
+
   return (
     <div className="hourly-modal-overlay" onClick={onClose}>
       <div className="hourly-modal" onClick={(e) => e.stopPropagation()}>
